@@ -3,11 +3,15 @@ package com.weather.vayu_backend;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @EnableScheduling
+@EnableAspectJAutoProxy
+@EnableCaching
 public class VayuBackendApplication {
 
 	public static void main(String[] args) {

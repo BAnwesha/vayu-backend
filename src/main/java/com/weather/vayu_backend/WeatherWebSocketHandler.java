@@ -9,6 +9,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,7 +43,13 @@ public class WeatherWebSocketHandler extends TextWebSocketHandler {
 
         try {
             WeatherResponse weatherResponse = weatherService.getWeather(city);
-            String jsonOutput = objectMapper.writeValueAsString(weatherResponse);
+
+            // Replace your old jsonOutput line with this block
+            Map<String, Object> multiplayerPayload = new HashMap<>();
+            multiplayerPayload.put("weather", weatherResponse);
+            multiplayerPayload.put("liveViewers", getActiveUsersForCity(city));
+
+            String jsonOutput = objectMapper.writeValueAsString(multiplayerPayload);
 
             session.sendMessage(new TextMessage(jsonOutput));
             userWeatherCache.put(session, jsonOutput);
@@ -60,7 +67,15 @@ public class WeatherWebSocketHandler extends TextWebSocketHandler {
 
         System.out.println("Disconnected: " + session.getId());
     }
-
+    private int getActiveUsersForCity(String city) {
+        int count = 0;
+        for (String mappedCity : userCityMap.values()) {
+            if (city.equals(mappedCity)) {
+                count++;
+            }
+        }
+        return count;
+    }
     public void updateAllClients() {
         for (Map.Entry<WebSocketSession, String> entry : userCityMap.entrySet()) {
             WebSocketSession session = entry.getKey();
@@ -69,20 +84,26 @@ public class WeatherWebSocketHandler extends TextWebSocketHandler {
             if (session.isOpen()) {
                 try {
                     WeatherResponse weatherResponse = weatherService.getWeather(city);
-                    String newJsonOutput = objectMapper.writeValueAsString(weatherResponse);
+
+                    // Replace your old newJsonOutput line with this block
+                    Map<String, Object> multiplayerPayload = new HashMap<>();
+                    multiplayerPayload.put("weather", weatherResponse);
+                    multiplayerPayload.put("liveViewers", getActiveUsersForCity(city));
+
+                    String newJsonOutput = objectMapper.writeValueAsString(multiplayerPayload);
 
                     String oldJsonOutput = userWeatherCache.get(session);
 
                     if (!newJsonOutput.equals(oldJsonOutput)) {
                         session.sendMessage(new TextMessage(newJsonOutput));
                         userWeatherCache.put(session, newJsonOutput);
-                        System.out.println("Weather changed for " + city + ". Pushed update to session " + session.getId());
+                        System.out.println("Weather changed for " + city + ". Pushed update.");
                     }
-
                 } catch (Exception e) {
                     System.err.println("Error updating client " + session.getId());
                 }
             }
         }
     }
+
 }

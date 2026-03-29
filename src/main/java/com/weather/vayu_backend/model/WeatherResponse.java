@@ -1,8 +1,9 @@
 package com.weather.vayu_backend.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class WeatherResponse {
+public class WeatherResponse implements Serializable {
 
     private String name;
     private Main main;
@@ -69,7 +70,7 @@ public class WeatherResponse {
         this.visibility = visibility;
     }
 
-    public static class Main {
+    public static class Main implements Serializable{
         private double temp;
         private double feels_like;
         private double temp_min;
@@ -126,7 +127,7 @@ public class WeatherResponse {
         }
     }
 
-    public static class Weather {
+    public static class Weather implements Serializable{
         private String main;
         private String description;
 
@@ -147,7 +148,7 @@ public class WeatherResponse {
         }
     }
 
-    public static class Wind {
+    public static class Wind implements Serializable{
         private double speed;
 
         public double getSpeed() {
@@ -159,7 +160,7 @@ public class WeatherResponse {
         }
     }
 
-    public static class Sys {
+    public static class Sys implements Serializable{
         private String country;
         private long sunrise;
         private long sunset;

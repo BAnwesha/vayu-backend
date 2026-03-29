@@ -25,6 +25,11 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'com.github.vladimir-bukhtoyarov:bucket4j-core:7.6.0'
+	implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
+	implementation 'org.aspectj:aspectjweaver'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 
 tasks.named('test') {
