@@ -1,24 +1,24 @@
-# Vayu Backend | Spring Boot WebSocket Adapter ☁️
+# Vayu Backend
 
-Vayu is a real-time weather application. This repository houses the Java Spring Boot backend, which acts as a "Smart Push" WebSocket adapter for the OpenWeatherMap REST API.
+The robust Spring Boot backend powering the Vayu interactive weather dashboard. This service handles direct communication with the OpenWeatherMap API and broadcasts real-time weather updates and user concurrency metrics via WebSockets.
 
-## 🏗️ Architecture & Optimization
-OpenWeatherMap is strictly a pull-based REST API. To provide the frontend with a live data stream without overwhelming the client with redundant data, this backend implements a **Caching Adapter Pattern**:
+## 🚀 Key Features & Recent Updates
 
-1. **Scheduled Polling:** A `@Scheduled` task polls the OpenWeather API every 60 seconds for active client cities.
-2. **State Cache:** A `ConcurrentHashMap` tracks the last broadcasted JSON state for every individual WebSocket session.
-3. **Smart Broadcasting:** The server compares the newly fetched API data against the cached state. It only pushes a new message to the client over the WebSocket if the weather data has *actually changed* (e.g., temperature drops, wind shifts).
-
-**Result:** Massive reduction in redundant network bandwidth and zero unnecessary frontend DOM re-renders.
+*   **Two-Step Weather Pipeline:** Implements a highly reliable, sequential data fetch using `RestTemplate`. It first grabs current weather coordinates, then retrieves the highly detailed One Call 3.0 7-day forecast.
+*   **Multiplayer WebSocket Broadcasting:** Maintains a continuous WebSocket connection with frontend clients. Pushes complex payloads containing both real-time weather data and dynamic "Live Viewers" counts for specific cities.
+*   **Fail-Safe Error Handling:** Designed to fail loudly in the console while safely returning `null` to the frontend, preventing "zombie" UI states (like showing 0°C) when external APIs reject requests or rate-limit.
+*   **Optimized Configuration Management:** Securely injects API keys and environment variables via Spring's `@Value` annotations.
 
 ## 🛠️ Tech Stack
-* **Framework:** Java Spring Boot
-* **Networking:** Spring WebSockets, Spring Web (RestTemplate)
-* **Concurrency:** `ConcurrentHashMap` for thread-safe session tracking
-* **External API:** OpenWeatherMap API
+*   **Java 17+**
+*   **Spring Boot 3.x** (Web, WebSockets)
+*   **Jackson** (JSON Serialization/Deserialization with strict `@JsonIgnoreProperties`)
+*   **OpenWeatherMap API** (Current & One Call 3.0)
 
-## 🚀 Running Locally
+## ⚙️ Local Setup
 
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/yourusername/vayu-backend.git](https://github.com/yourusername/vayu-backend.git)
+1. Clone the repository.
+2. Ensure you have an active OpenWeatherMap API key (with One Call 3.0 enabled).
+3. In `src/main/resources/application.properties`, add your key:
+   ```properties
+   weather.api.key=YOUR_API_KEY_HERE
