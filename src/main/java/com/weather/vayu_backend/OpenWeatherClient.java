@@ -27,6 +27,7 @@ public class OpenWeatherClient {
         System.out.println("Attempting to call OpenWeatherMap API for: " + city);
 
         String finalUrl =apiUrl.replace("{city}",city).replace("{apiKey}",apiKey);
+
         return restTemplate.getForObject(finalUrl, WeatherResponse.class);
     }
 
